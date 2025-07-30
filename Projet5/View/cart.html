@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - ELECTROSTORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="./images/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html,
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #CEACEE, #AB8BF0, #8B5EEA, #9AC8EE, #5188E6, #565EE8);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+</head>
+
+<body class="gradient-bg text-white min-h-screen">
+    <!-- Mobile Menu (for consistency with other pages) -->
+    <script>
+        // Mobile menu toggle implementation
+        document.addEventListener('DOMContentLoaded', function () {
+            const nav = document.querySelector('nav');
+            if (nav && !document.getElementById('mobile-menu-toggle')) {
+                const btn = document.createElement('button');
+                btn.id = 'mobile-menu-toggle';
+                btn.className = 'md:hidden focus:outline-none ml-4';
+                btn.setAttribute('aria-label', 'Open mobile menu');
+                btn.setAttribute('aria-controls', 'mobile-menu');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                nav.querySelector('div').appendChild(btn);
+            }
+            let mobileMenu = document.getElementById('mobile-menu');
+            if (!mobileMenu) {
+                mobileMenu = document.createElement('div');
+                mobileMenu.id = 'mobile-menu';
+                mobileMenu.className = 'fixed inset-0 bg-gray-900 bg-opacity-95 z-50 flex flex-col items-center justify-center space-y-8 md:hidden transition-all duration-500 ease-in-out opacity-0 pointer-events-none';
+                mobileMenu.innerHTML = `
+                <a href="../index.html" class="text-2xl font-bold tracking-wider mb-8">ELECTROSTORE</a>
+                <a href="product.html" class="nav-link text-2xl" onclick="closeMobileMenu()">Products</a>
+                <a href="about.html" class="nav-link text-2xl" onclick="closeMobileMenu()">About</a>
+                <a href="contact.html" class="nav-link text-2xl" onclick="closeMobileMenu()">Contact</a>
+                <a href="cart.html" class="nav-link text-2xl font-bold" onclick="closeMobileMenu()">Cart</a>
+                <button type="button" onclick="closeMobileMenu()" class="mt-12 px-6 py-2 rounded-full bg-blue-600 text-white font-semibold">Close</button>
+            `;
+                document.body.appendChild(mobileMenu);
+            }
+            function openMobileMenu() {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                mobileMenu.classList.add('opacity-100');
+                mobileMenu.style.display = 'flex';
+                setTimeout(() => {
+                    mobileMenu.classList.add('scale-105');
+                }, 10);
+                document.getElementById('mobile-menu-toggle').setAttribute('aria-expanded', 'true');
+            }
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('scale-105');
+                mobileMenu.classList.remove('opacity-100');
+                mobileMenu.classList.add('opacity-0');
+                setTimeout(() => {
+                    mobileMenu.style.display = 'none';
+                    mobileMenu.classList.add('pointer-events-none');
+                }, 400);
+                document.getElementById('mobile-menu-toggle').setAttribute('aria-expanded', 'false');
+            }
+            window.closeMobileMenu = closeMobileMenu;
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function () {
+                    if (mobileMenu.style.display === 'none' || mobileMenu.classList.contains('opacity-0')) {
+                        openMobileMenu();
+                    } else {
+                        closeMobileMenu();
+                    }
+                });
+            }
+        });
+    </script>
+    <nav class="gradient-bg sticky top-0 z-40 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="../index.html" class="text-2xl font-bold tracking-wider">ELECTROSTORE</a>
+            <a href="product.html" class="text-lg font-semibold hover:underline">Continue Shopping</a>
+        </div>
+    </nav>
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold mb-8 text-center">Your Cart</h1>
+            <div class="flex gap-4 mb-4">
+                <button onclick="localStorage.removeItem('cart');location.reload();"
+                    class="px-3 py-1 bg-red-600 rounded text-xs">Clear Cart</button>
+            </div>
+            <div id="cart-items" class="space-y-8 max-w-3xl mx-auto"></div>
+            <div id="cart-summary" class="mt-12 max-w-3xl mx-auto text-right"></div>
+            <!-- No border line at the bottom -->
+        </div>
+    </section>
+    <script>
+        // Render cart items from localStorage (single unified cart)
+        function renderCart() {
+            // ...
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cartItems = document.getElementById('cart-items');
+            const cartSummary = document.getElementById('cart-summary');
+            if (!cart.length) {
+                cartItems.innerHTML = '<div class="text-center text-white-400">Your cart is empty.</div>';
+                cartSummary.innerHTML = '';
+                return;
+            }
+            let total = 0;
+            cartItems.innerHTML = cart.map(item => {
+                let priceNum = parseFloat((item.price || '').replace(/[^\d.]/g, '')) || 0;
+                let subtotal = priceNum * (item.qty || 1);
+                total += subtotal;
+                // Handle image path - prepend '../' if needed
+                let imgSrc = item.img || '';
+                if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('../')) {
+                    imgSrc = '../' + imgSrc;
+                }
+                return `
+                <div class="flex items-center bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <img src="${imgSrc || 'https://via.placeholder.com/96x96?text=No+Image'}" 
+                         alt="${item.name}" 
+                         class="w-24 h-24 object-cover rounded-lg mr-6"
+                         onerror="this.src='https://via.placeholder.com/96x96?text=Image+Not+Found'">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-1">${item.name}</h3>
+                        <p class="text-gray-300 mb-2">${item.desc || ''}</p>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-lg font-semibold">${item.price || 'N/A'}</span>
+                            <span class="text-gray-400">x${item.qty || 1}</span> <span class="text-gray-400">= ${subtotal.toLocaleString()} DH</span>   
+                        </div>
+                    </div>
+                    <button class="remove-item text-red-400 hover:text-red-300 ml-4" 
+                            data-name="${encodeURIComponent(item.name)}" 
+                            data-category="${item.category || ''}" 
+                            title="Remove">
+                        <i class="fas fa-trash-alt text-2xl"></i>
+                    </button>
+                </div>
+                `;
+            }).join('');
+            cartSummary.innerHTML = `
+                <div class="text-2xl font-bold">Total: <span class="text-white-400">${total.toLocaleString()} DH</span></div>
+                <button onclick="checkout()" class="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold">
+                    Proceed to Checkout
+                </button>
+            `;
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const name = decodeURIComponent(btn.getAttribute('data-name'));
+                    const category = btn.getAttribute('data-category');
+                    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    cart = cart.filter(p => !(p.name === name && p.category === category));
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    renderCart();
+                });
+            });
+        }
+        function checkout() {
+            localStorage.removeItem('cart');
+            alert('Thank you for your purchase! Your cart has been cleared.');
+            renderCart();
+        }
+        renderCart();
+    </script>
+</body>
+
+</html>

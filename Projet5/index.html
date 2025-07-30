@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELECTROSTORE - Futuristic Tech Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="./View/images/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html,
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        /* Animated gradient border for product cards */
+        .card-gradient-border {
+            position: relative;
+            z-index: 0;
+        }
+
+        .card-gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            z-index: -1;
+            border-radius: 1rem;
+            background: linear-gradient(120deg, #8B5EEA, #9AC8EE, #5188E6, #CEACEE, #AB8BF0, #8B5EEA);
+            background-size: 300% 300%;
+            animation: borderFlow 4s linear infinite;
+        }
+
+        @keyframes borderFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .card-gradient-border:hover::before {
+            filter: brightness(1.2) blur(1px);
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 32px 0 rgba(86, 94, 232, 0.18), 0 1.5px 8px 0 rgba(154, 200, 238, 0.10);
+            transition: box-shadow 0.3s;
+        }
+
+        .card-gradient-border:hover .card-shadow {
+            box-shadow: 0 8px 48px 0 rgba(86, 94, 232, 0.32), 0 3px 16px 0 rgba(154, 200, 238, 0.18);
+        }
+
+        .badge-new {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: linear-gradient(90deg, #8B5EEA, #9AC8EE);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            box-shadow: 0 2px 8px rgba(86, 94, 232, 0.18);
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .camera-badge {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @media (max-width: 640px) {
+            .feature-callout {
+                max-width: 120px;
+                font-size: 0.7rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            .sale-banner {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.75rem;
+                right: 0.5rem;
+                top: 0.5rem;
+            }
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #CEACEE, #AB8BF0, #8B5EEA, #9AC8EE, #5188E6, #565EE8);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+        }
+
+        .skeleton {
+            background-color: #2d3748;
+            background-image: linear-gradient(90deg, #2d3748, #4a5568, #2d3748);
+            background-size: 200px 100%;
+            background-repeat: no-repeat;
+            animation: shimmer 1.5s infinite linear;
+            border-radius: 0.5rem;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+
+            100% {
+                background-position: 200px 0;
+            }
+        }
+
+
+        .tech-glow {
+            box-shadow: 0 0 15px rgba(154, 200, 238, 0.7);
+        }
+
+        .video-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .video-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(86, 94, 232, 0.3), rgba(154, 200, 238, 0.3));
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Navbar link hover animation */
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white">
+    <!-- Skeleton Loading -->
+    <div id="skeleton-loader" class="fixed inset-0 bg-gray-900 z-50 overflow-y-auto">
+        <!-- Navbar Skeleton -->
+        <div class="h-16 skeleton mb-4"></div>
+
+        <!-- Hero Section Skeleton -->
+        <div class="container mx-auto px-4 py-8">
+            <div class="w-48 h-8 skeleton mx-auto mb-6"></div>
+            <div class="w-3/4 h-12 skeleton mx-auto mb-4"></div>
+            <div class="w-1/2 h-6 skeleton mx-auto mb-8"></div>
+            <div class="w-full max-w-2xl h-96 skeleton mx-auto rounded-xl"></div>
+        </div>
+
+        <!-- Features Skeleton -->
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="h-32 skeleton rounded-lg"></div>
+                <div class="h-32 skeleton rounded-lg"></div>
+                <div class="h-32 skeleton rounded-lg"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="h-64 skeleton rounded-lg"></div>
+                <div>
+                    <div class="w-3/4 h-8 skeleton mb-4"></div>
+                    <div class="w-full h-4 skeleton mb-2"></div>
+                    <div class="w-full h-4 skeleton mb-2"></div>
+                    <div class="w-2/3 h-4 skeleton mb-6"></div>
+                    <div class="w-32 h-10 skeleton rounded-full"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Skeleton -->
+        <div class="bg-gray-800 py-8">
+            <div class="container mx-auto px-4">
+                <div class="w-48 h-8 skeleton mx-auto mb-12"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="h-80 skeleton rounded-xl"></div>
+                    <div class="h-80 skeleton rounded-xl"></div>
+                    <div class="h-80 skeleton rounded-xl"></div>
+                    <div class="h-80 skeleton rounded-xl"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonials Skeleton -->
+        <div class="py-8">
+            <div class="container mx-auto px-4">
+                <div class="w-48 h-8 skeleton mx-auto mb-12"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="h-48 skeleton rounded-xl"></div>
+                    <div class="h-48 skeleton rounded-xl"></div>
+                    <div class="h-48 skeleton rounded-xl"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Skeleton -->
+        <div class="h-32 skeleton"></div>
+    </div>
+
+    <!-- Navigation Bar - Fixed at top with gradient background -->
+    <nav class="gradient-bg sticky top-0 z-40 shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="text-2xl font-bold tracking-wider">ELECTROSTORE</a>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="index.html" class="nav-link hover:text-gray-200 transition font-bold">Home</a>
+                        <a href="./View/product.html" class="nav-link hover:text-gray-200 transition">Products</a>
+                        <a href="./View/about.html" class="nav-link hover:text-gray-200 transition">About</a>
+                        <a href="./View/contact.html" class="nav-link hover:text-gray-200 transition">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="./View/cart.html" class="relative hover:text-blue-400 transition" title="View Cart">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span
+                            class="cart-count absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </a>
+                    <a href="./View/profile.html"><i
+                            class="fas fa-user-circle text-xl cursor-pointer hover:text-gray-200"></i>
+                    </a>
+                    <button id="mobile-menu-toggle" class="md:hidden focus:outline-none" aria-label="Open mobile menu"
+                        aria-controls="mobile-menu" aria-expanded="false">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section - Main showcase area with animated background -->
+    <section class="gradient-bg py-12 md:py-20 relative overflow-hidden" aria-label="Hero section">
+
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-8">
+                <div
+                    class="bg-gray-800 text-white px-4 py-2 rounded-full inline-block mb-8 border border-gray-600 hover:px-6 hover:py-3 hover:border-blue-400 transition-all duration-300 group">
+                    <div class="flex items-center justify-center space-x-2">
+                        <span class="apple-logo opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <img src="./View/images/apple.png" alt="Apple Logo" class="h-5 w-5">
+                        </span>
+                        <span
+                            class="font-medium text-base group-hover:text-lg tracking-wide transition-all duration-300">Certified
+                            by Apple</span>
+                    </div>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">THE FUTURE IS HERE</h1>
+                <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">Experience cutting-edge technology with our
+                    latest collection of futuristic devices</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-center">
+                <div class="relative w-full mx-0">
+                    <div class="tech-glow rounded-3xl overflow-hidden relative w-full">
+                        <img id="iphone-image" src="./View/images/iphone_16.jpg" alt="iPhone 16 Pro"
+                            class="w-full h-auto rounded-3xl opacity-0 transition-all duration-700 transform -translate-y-5 scale-105 md:scale-110 shadow-2xl"
+                            style="max-width:100vw; min-width:100%; object-fit:cover; margin:auto;" loading="lazy">
+                    </div>
+                    <!-- Upgraded Feature Details Overlay -->
+                    <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                        <div class="flex justify-between mt-8 px-8">
+                            <!-- Camera Feature -->
+                            <div
+                                class="hidden md:block bg-gray-900 bg-opacity-80 p-5 rounded-2xl border-l-8 border-blue-400 shadow-xl max-w-xs animate-fade-in-up">
+                                <h4 class="font-extrabold text-blue-300 text-lg mb-2 tracking-wide flex items-center"><i
+                                        class="fas fa-camera text-blue-400 mr-2"></i>Pro Camera System</h4>
+                                <ul class="text-sm text-gray-200 space-y-1">
+                                    <li>• 48MP Main Camera</li>
+                                    <li>• 8K Cinematic Mode</li>
+                                    <li>• Night Vision 2.0</li>
+                                    <li>• AI-Powered Stabilization</li>
+                                </ul>
+                            </div>
+                            <!-- Display Feature -->
+                            <div
+                                class="hidden md:block bg-gray-900 bg-opacity-80 p-5 rounded-2xl border-r-8 border-purple-400 shadow-xl max-w-xs animate-fade-in-up text-right">
+                                <h4
+                                    class="font-extrabold text-purple-300 text-lg mb-2 tracking-wide flex items-center justify-end">
+                                    <i class="fas fa-display text-purple-400 mr-2"></i>Display Features
+                                </h4>
+                                <ul class="text-sm text-gray-200 space-y-1">
+                                    <li>6.7" ProMotion XDR •</li>
+                                    <li>2000 nits peak brightness •</li>
+                                    <li>Always-On 2.0 •</li>
+                                    <li>Dynamic Island Pro •</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Futuristic connection lines -->
+                        <div class="w-full flex justify-center mb-2">
+                            <svg width="90%" height="80" viewBox="0 0 800 80" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M400,0 C400,40 350,60 300,70 C250,80 200,80 150,70 C100,60 50,40 0,40"
+                                    stroke="rgba(154, 200, 238, 0.6)" stroke-width="2" fill="none"
+                                    stroke-dasharray="5,5"></path>
+                                <path d="M400,0 C400,40 450,60 500,70 C550,80 600,80 650,70 C700,60 750,40 800,40"
+                                    stroke="rgba(154, 200, 238, 0.6)" stroke-width="2" fill="none"
+                                    stroke-dasharray="5,5"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Details Section - Highlights key features of the iPhone -->
+    <section class="py-16 bg-gray-900 relative">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div class="text-center md:text-right">
+                    <h3
+                        class="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
+                        A17 Pro Chip</h3>
+                    <p class="text-gray-300">3nm architecture with 20% faster <br>performance and 30% better efficiency
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <h3
+                        class="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                        Pro Camera System</h3>
+                    <p class="text-gray-300">Advanced quad-pixel sensor with 24MP default output</p>
+                </div>
+
+                <div class="text-center md:text-left">
+                    <h3
+                        class="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-400">
+                        Titanium Design</h3>
+                    <p class="text-gray-300">Aerospace-grade titanium with ceramic <br>shield front and back</p>
+                </div>
+            </div>
+
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="video-container">
+                    <video autoplay loop muted playsinline class="w-full h-auto rounded-lg"
+                        aria-label="iPhone 16 Pro introduction video" poster="./View/images/i16.png">
+                        <source src="./View/images/Introducing iPhone 16 Pro  Apple - Apple (1080p, h264).mp4"
+                            type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">About ELECTROSTORE</h2>
+                    <p class="text-gray-300 mb-4">Founded in 2025, ELECTROSTORE is at the forefront of technological
+                        innovation, bringing you the most advanced devices before they hit the mainstream market.</p>
+                    <p class="text-gray-300 mb-6">Our team of futurists and tech enthusiasts work tirelessly to source
+                        and deliver products that will shape tomorrow's digital landscape.</p>
+                    <button class="px-6 py-3 rounded-full gradient-bg font-medium hover:opacity-90 transition">Explore
+                        More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section - Horizontal scrollable row of highlighted products -->
+    <section class="py-16 bg-gray-800 relative overflow-x-hidden">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Featured Products</h2>
+            <!-- Animated gradient background overlay -->
+            <div class="absolute inset-0 pointer-events-none z-0"
+                style="background: linear-gradient(120deg, #8B5EEA33 0%, #9AC8EE33 100%); filter: blur(40px); opacity: 0.7;">
+            </div>
+            <div class="relative flex gap-8 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-800 py-4 pl-4"
+                style="scrollbar-color: #8B5EEA #23272f; scroll-snap-type: x mandatory;">
+                <!-- Product 1 -->
+                <div
+                    class="card-gradient-border rounded-xl p-1 group hover:scale-105 transition duration-300 min-w-[300px] max-w-xs flex-shrink-0 scroll-snap-align: start;">
+                    <a href="./View/product.html" class="absolute inset-0 z-10" style="cursor:pointer;"
+                        title="View Product"></a>
+                    <div class="relative bg-gray-900 rounded-xl p-6 card-shadow">
+                        <span class="badge-new">NEW</span>
+                        <div class="relative h-48 mb-4 rounded-lg overflow-hidden">
+                            <img src="./View/images/pc1.jpg" alt="Quantum Laptop X9"
+                                class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-500 group-hover:opacity-0"
+                                loading="lazy">
+                            <img src="./View/images/pc2.jpg" alt="Quantum Laptop X9 Alt"
+                                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                                loading="lazy">
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Lenovo Thinkpad X9</h3>
+                        <p class="text-gray-400 mb-4">16-core, 32GB RAM, 2TB SSD</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold">3,299 DH</span>
+                            <button class="text-blue-400 hover:text-blue-300"><i
+                                    class="fas fa-plus-circle text-2xl"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div
+                    class="card-gradient-border rounded-xl p-1 group hover:scale-105 transition duration-300 min-w-[300px] max-w-xs flex-shrink-0">
+                    <a href="./View/product.html" class="absolute inset-0 z-10" style="cursor:pointer;"
+                        title="View Product"></a>
+                    <div class="relative bg-gray-900 rounded-xl p-6 card-shadow">
+                        <div class="relative h-48 mb-4 rounded-lg overflow-hidden">
+                            <img src="./View/images/airpods1.png" alt="Neural AirPods Pro"
+                                class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-500 group-hover:opacity-0"
+                                loading="lazy">
+                            <img src="./View/images/airpods2.jpg" alt="Neural AirPods Pro Alt"
+                                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                                loading="lazy">
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Neural AirPods Pro</h3>
+                        <p class="text-gray-400 mb-4">Adaptive sound, brainwave sync</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold">499 DH</span>
+                            <button class="text-blue-400 hover:text-blue-300"><i
+                                    class="fas fa-plus-circle text-2xl"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div
+                    class="card-gradient-border rounded-xl p-1 group hover:scale-105 transition duration-300 min-w-[300px] max-w-xs flex-shrink-0">
+                    <a href="./View/product.html" class="absolute inset-0 z-10" style="cursor:pointer;"
+                        title="View Product"></a>
+                    <div class="relative bg-gray-900 rounded-xl p-6 card-shadow">
+                        <div class="relative h-48 mb-4 rounded-lg overflow-hidden">
+                            <img src="./View/images/holo1.jpeg" alt="HoloWatch 4"
+                                class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-500 group-hover:opacity-0"
+                                loading="lazy">
+                            <img src="./View/images/holo2.jpeg" alt="HoloWatch 4 Alt"
+                                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                                loading="lazy">
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">HoloWatch 4</h3>
+                        <p class="text-gray-400 mb-4">Holographic display, health AI</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold">799 DH</span>
+                            <button class="text-blue-400 hover:text-blue-300"><i
+                                    class="fas fa-plus-circle text-2xl"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div
+                    class="card-gradient-border rounded-xl p-1 group hover:scale-105 transition duration-300 min-w-[300px] max-w-xs flex-shrink-0">
+                    <a href="./View/product.html" class="absolute inset-0 z-10" style="cursor:pointer;"
+                        title="View Product"></a>
+                    <div class="relative bg-gray-900 rounded-xl p-6 card-shadow">
+                        <div class="relative h-48 mb-4 rounded-lg overflow-hidden">
+                            <img src="./View/images/vision1.jpg" alt="Vision Pro AR"
+                                class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-500 group-hover:opacity-0"
+                                loading="lazy">
+                            <img src="./View/images/vision2.jpg" alt="Vision Pro AR Alt"
+                                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                                loading="lazy">
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Vision Pro AR</h3>
+                        <p class="text-gray-400 mb-4">8K resolution, neural interface</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold">4,999 DH</span>
+                            <button class="text-blue-400 hover:text-blue-300"><i
+                                    class="fas fa-plus-circle text-2xl"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">What Our Customers Say</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-xl font-bold mr-4">
+                            JD</div>
+                        <div>
+                            <h4 class="font-semibold">John D.</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">"The iPhone 16 Pro's camera is revolutionary. The night vision feature
+                        works better than my actual eyes!"</p>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-xl font-bold mr-4">
+                            SM</div>
+                        <div>
+                            <h4 class="font-semibold">Sarah M.</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">"ELECTROSTORE delivered my Quantum Laptop ahead of schedule. The
+                        performance is mind-blowing!"</p>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-xl font-bold mr-4">
+                            AR</div>
+                        <div>
+                            <h4 class="font-semibold">Alex R.</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">"Best tech shopping experience ever. Their support team helped me choose
+                        the perfect setup."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="gradient-bg py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">ELECTROSTORE</h3>
+                    <p class="text-gray-200 mb-4">The future of technology at your fingertips.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-gray-200"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white hover:text-gray-200"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white hover:text-gray-200"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white hover:text-gray-200"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="./View/product.html#smartphones"
+                                class="text-gray-200 hover:text-white">Smartphones</a></li>
+                        <li><a href="./View/product.html#laptops" class="text-gray-200 hover:text-white">Laptops</a>
+                        </li>
+                        <li><a href="./View/product.html#wearables" class="text-gray-200 hover:text-white">Wearables</a>
+                        </li>
+                        <li><a href="./View/product.html#accessories"
+                                class="text-gray-200 hover:text-white">Accessories</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-200 hover:text-white">Home</a></li>
+                        <li><a href="./View/contact.html" class="text-gray-200 hover:text-white">Contact Us</a></li>
+                        <li><a href="./View/product.html" class="text-gray-200 hover:text-white">Products</a></li>
+                        <li><a href="./View/about.html" class="text-gray-200 hover:text-white">About</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">Account</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="./View/cart.html" class="relative">
+                            <i class="fas fa-shopping-cart text-xl cursor-pointer hover:text-gray-200"></i>
+                            <span
+                                class="cart-count absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                        </a>
+                        <a href="./View/profile.html"><i
+                                class="fas fa-user-circle text-xl cursor-pointer hover:text-gray-200"></i></a>
+                    </div>
+                    <p class="text-gray-200 mb-2">Subscribe to our newsletter</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email"
+                            class="px-4 py-2 rounded-l-full bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none">
+                        <button class="px-4 py-2 bg-white bg-opacity-30 rounded-r-full hover:bg-opacity-40"><i
+                                class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-white border-opacity-20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-200 mb-4 md:mb-0">&copy; 2025 ELECTROSTORE. All rights reserved.</p>
+            </div>
+        </div>
+
+    </footer>
+
+
+    <script>
+        // Update all cart count badges from localStorage
+        function updateCartCount() {
+            let cart = [];
+            try {
+                cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            } catch (e) { }
+            document.querySelectorAll('.cart-count').forEach(function (el) {
+                el.textContent = cart.length;
+            });
+        }
+        updateCartCount();
+        window.addEventListener('storage', updateCartCount);
+        // Hide skeleton loader when page is loaded
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                // Animate skeleton fade out
+                document.getElementById('skeleton-loader').style.opacity = '0';
+                setTimeout(function () {
+                    document.getElementById('skeleton-loader').style.display = 'none';
+                }, 300);
+                const iphoneImage = document.getElementById('iphone-image');
+                iphoneImage.classList.remove('opacity-0');
+                iphoneImage.classList.remove('-translate-y-5');
+                iphoneImage.classList.remove('scale-95');
+                iphoneImage.classList.add('scale-100');
+                // Replace skeleton placeholders with actual content
+                const skeletons = document.querySelectorAll('.skeleton');
+                skeletons.forEach(skeleton => {
+                    skeleton.classList.remove('skeleton');
+                    skeleton.classList.add('bg-gray-700');
+                });
+            }, 800);
+        });
+
+        // Mobile menu toggle implementation
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        let mobileMenu = document.getElementById('mobile-menu');
+        if (!mobileMenu) {
+            mobileMenu = document.createElement('div');
+            mobileMenu.id = 'mobile-menu';
+            mobileMenu.className = 'fixed inset-0 bg-gray-900 bg-opacity-95 z-50 flex flex-col items-center justify-center space-y-8 md:hidden transition-all duration-500 ease-in-out opacity-0 pointer-events-none';
+            mobileMenu.innerHTML = `
+                <a href="#" class="text-2xl font-bold tracking-wider mb-8">ELECTROSTORE</a>
+                <a href="index.html" class="nav-link text-2xl" onclick="closeMobileMenu()">Home</a>
+                <a href="./View/product.html" class="nav-link text-2xl" onclick="closeMobileMenu()">Products</a>
+                <a href="./View/about.html" class="nav-link text-2xl" onclick="closeMobileMenu()">About</a>
+                <a href="./View/contact.html" class="nav-link text-2xl" onclick="closeMobileMenu()">Contact</a>
+                <button type="button" onclick="closeMobileMenu()" class="mt-12 px-6 py-2 rounded-full bg-blue-600 text-white font-semibold">Close</button>
+            `;
+            document.body.appendChild(mobileMenu);
+        }
+        function openMobileMenu() {
+            mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+            mobileMenu.classList.add('opacity-100');
+            mobileMenu.style.display = 'flex';
+            setTimeout(() => {
+                mobileMenu.classList.add('scale-105');
+            }, 10);
+            mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        }
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('scale-105');
+            mobileMenu.classList.remove('opacity-100');
+            mobileMenu.classList.add('opacity-0');
+            setTimeout(() => {
+                mobileMenu.style.display = 'none';
+                mobileMenu.classList.add('pointer-events-none');
+            }, 400);
+            mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        }
+        mobileMenuToggle.addEventListener('click', function () {
+            if (mobileMenu.style.display === 'none' || mobileMenu.classList.contains('opacity-0')) {
+                openMobileMenu();
+            } else {
+                closeMobileMenu();
+            }
+        });
+        window.closeMobileMenu = closeMobileMenu;
+    </script>
+</body>
+
+</html>
